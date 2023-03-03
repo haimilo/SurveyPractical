@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { SPFI } from "@pnp/sp";
 import * as React from "react";
 import { useEffect, useMemo, useState } from "react";
@@ -59,7 +60,7 @@ const SurveyForm = (props: ISurveyForm) => {
       {isUserAnswered ? (
         <div>
           <p>You have already answered the survey</p>
-          <button>View My Response</button>
+          <Button variant="contained">View My Response</Button>
         </div>
       ) : (
         <div>
@@ -72,9 +73,9 @@ const SurveyForm = (props: ISurveyForm) => {
             //   currentUserId={currentUserId}
             />
           ) : (
-            <button onClick={() => setGetStartSurvey(true)}>
+            <Button variant="contained" onClick={() => setGetStartSurvey(true)}>
               Start Survey
-            </button>
+            </Button>
           )}
         </div>
       )}
