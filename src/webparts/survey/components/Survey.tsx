@@ -11,7 +11,7 @@ const Survey = (props: ISurveyProps) => {
     <section>
       <UserProfile userDisplayName={userDisplayName} userEmail={userEmail} />
       <CurrentTime />
-      <SurveyForm context={context} />
+      <SurveyForm context={context} userEmail={userEmail} />
     </section>
   );
 };
