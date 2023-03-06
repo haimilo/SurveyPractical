@@ -13,6 +13,8 @@ const SurveyForm = (props: ISurveyForm) => {
 
   const [_dataSurveyForm, _setDataSurveyForm] = useState<IUserDataSurvey[]>([]);
   const [getStartSurvey, setGetStartSurvey] = useState<boolean>(false);
+
+  const [users, setUsers] = useState<IUserDataSurvey>();
   const getDataList = async () => {
     try {
       const list = await _sp.web.lists();
@@ -20,6 +22,19 @@ const SurveyForm = (props: ISurveyForm) => {
       console.log(items, list);
       _setDataSurveyForm(
         items.map((item: IUserDataSurvey) => {
+          if (item.Email === currentUserEmail) {
+            setUsers({
+              Id: item.Id,
+              Title: item.Title,
+              FullName: item.FullName,
+              Email: item.Email,
+              HasAnsweredSurvey: item.HasAnsweredSurvey,
+              Question1: item.Question1,
+              Question2: item.Question2,
+              Question3: item.Question3,
+              Question4: item.Question4,
+            });
+          }
           return {
             Id: item.Id,
             Title: item.Title,
@@ -52,8 +67,6 @@ const SurveyForm = (props: ISurveyForm) => {
     }
   }, [_dataSurveyForm]);
 
-  console.log("checkUser", isUserAnswered);
-
   return (
     <div>
       <h1>Survey Form</h1>
@@ -66,11 +79,9 @@ const SurveyForm = (props: ISurveyForm) => {
         <div>
           {getStartSurvey ? (
             <QuestionList
-            //   data={users}
-            //   setUsers={setUsers}
-            //   currentUserEmail={props.Email}
-            //   context={props.context}
-            //   currentUserId={currentUserId}
+              dataCurrentUser={users}
+              context={props.context}
+              listName={LIST_NAME}
             />
           ) : (
             <Button variant="contained" onClick={() => setGetStartSurvey(true)}>
