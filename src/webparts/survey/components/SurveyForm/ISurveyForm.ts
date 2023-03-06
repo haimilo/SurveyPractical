@@ -2,6 +2,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 export interface ISurveyForm {
   context: WebPartContext;
+  userEmail: string;
 }
 
 export interface IUserDataSurvey {
