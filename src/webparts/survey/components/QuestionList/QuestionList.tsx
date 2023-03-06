@@ -51,10 +51,6 @@ const QuestionList = (props: IQuestionList) => {
   const error = languages.filter((v) => v).length < 2;
 
   const handleSubmitForm = () => {
-    // setSurveySubmitValue({
-    //   ...surveySubmitValue,
-    //   HasAnsweredSurvey: true,
-    // });
     // call api to update to sharepoint list
     const updateSurvey = async (itemId: number, listName: string) => {
       try {
@@ -68,6 +64,7 @@ const QuestionList = (props: IQuestionList) => {
             Question4: answer4 ? answer4 : 0,
             HasAnsweredSurvey: true,
           });
+        setQuestionNumber(5);
       } catch (error) {
         console.log(error);
       }
@@ -263,6 +260,9 @@ const QuestionList = (props: IQuestionList) => {
             </Typography>
           </>
         )}
+        {questionNumber === 5 && (
+          <Typography>Thank you for your time!</Typography>
+        )}
       </Box>
 
       <Box
@@ -274,7 +274,7 @@ const QuestionList = (props: IQuestionList) => {
           alignItems: "center",
         }}
       >
-        {questionNumber >= 2 && (
+        {questionNumber >= 2 && questionNumber < 4 && (
           <Button
             variant="contained"
             onClick={() => {
