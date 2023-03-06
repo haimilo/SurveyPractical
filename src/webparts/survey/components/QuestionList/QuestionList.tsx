@@ -100,7 +100,7 @@ const QuestionList = (props: IQuestionList) => {
           }}
         >
           <Typography>{questionNumber}</Typography>
-          <Typography>/4</Typography>
+          <Typography>/5</Typography>
         </Box>
       </Box>
 
