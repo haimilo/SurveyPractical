@@ -13,13 +13,12 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import { SPFI } from "@pnp/sp";
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { getSP } from "../../../../pnpConfig";
-// import { IUserDataSurvey } from "../SurveyForm/ISurveyForm";
-import { IQuestionList } from "./IQuestionList";
+import { Calendar as SelectDate } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { Calendar as SelectDate } from "react-date-range";
+import { IQuestionList } from "./IQuestionList";
 
 const labels: { [index: string]: string } = {
   1: "Useless",
@@ -48,7 +47,43 @@ const QuestionList = (props: IQuestionList) => {
   const [answer4, setAnswer4] = React.useState<number | null>(0);
   const [hover, setHover] = React.useState(-1);
 
+  const [yearsOld, setYearsOld] = React.useState<number | null>();
+  console.log("answer3", answer3);
+  const [sub, setSub] = React.useState<boolean>(false);
+
   const error = languages.filter((v) => v).length < 2;
+
+  const showAge = useEffect(() => {
+    if (!answer3) return null;
+    const currentYear = Number(new Date().getFullYear());
+    const userBornYear = Number(new Date(answer3 as any).getFullYear());
+    console.log(currentYear, userBornYear);
+    setYearsOld(currentYear - userBornYear);
+  }, [answer3, yearsOld]);
+
+  const showMonth = useMemo(() => {
+    if (!answer3) return null;
+    const currentMonth = Number(new Date().getMonth());
+    const userBornMonth = Number(new Date(answer3 as any).getMonth());
+    if (currentMonth < userBornMonth) {
+      setSub(false);
+      const value = userBornMonth - currentMonth;
+      return value;
+    } else if (currentMonth > userBornMonth) {
+      setSub(true);
+      const value = currentMonth - userBornMonth;
+      return value;
+    } else {
+      setSub(false);
+      return 0;
+    }
+  }, [answer3, showAge]);
+  console.log("showAge", yearsOld, showMonth, sub);
+
+  useEffect(() => {
+    if (sub) setYearsOld(yearsOld - 1);
+    else setYearsOld(yearsOld);
+  }, [yearsOld]);
 
   const handleSubmitForm = () => {
     // call api to update to sharepoint list
@@ -212,10 +247,10 @@ const QuestionList = (props: IQuestionList) => {
                   date={answer3}
                 />
               </Box>
-              {answer3 && (
+              {answer3 && yearsOld && showMonth && (
                 <Typography>
-                  You are <strong>{answer3?.getFullYear() - 1970}</strong> years
-                  and <strong>{answer3?.getMonth()}</strong> months old.
+                  You are <strong>{yearsOld}</strong> years and{" "}
+                  <strong>{showMonth}</strong> months old.
                 </Typography>
               )}
             </Typography>

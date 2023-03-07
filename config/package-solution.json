@@ -4,7 +4,7 @@
     "name": "survey-client-side-solution",
     "id": "e55ab62f-a420-41d5-9097-3f96fe9aea9c",
     "version": "1.0.0.0",
-    "includeClientSideAssets": true,
+    "includeClientSideAssets": false,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "developer": {
