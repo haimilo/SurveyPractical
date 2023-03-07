@@ -48,42 +48,40 @@ const QuestionList = (props: IQuestionList) => {
   const [hover, setHover] = React.useState(-1);
 
   const [yearsOld, setYearsOld] = React.useState<number | null>();
-  console.log("answer3", answer3);
   const [sub, setSub] = React.useState<boolean>(false);
-
   const error = languages.filter((v) => v).length < 2;
 
   const showAge = useEffect(() => {
     if (!answer3) return null;
     const currentYear = Number(new Date().getFullYear());
     const userBornYear = Number(new Date(answer3 as any).getFullYear());
-    console.log(currentYear, userBornYear);
     setYearsOld(currentYear - userBornYear);
   }, [answer3, yearsOld]);
 
-  const showMonth = useMemo(() => {
+  const oldMonth = useMemo(() => {
     if (!answer3) return null;
     const currentMonth = Number(new Date().getMonth());
     const userBornMonth = Number(new Date(answer3 as any).getMonth());
-    if (currentMonth < userBornMonth) {
-      setSub(false);
-      const value = userBornMonth - currentMonth;
-      return value;
-    } else if (currentMonth > userBornMonth) {
+    return userBornMonth - currentMonth;
+  }, [answer3, showAge]);
+
+  const showMonth = useMemo(() => {
+    if (oldMonth < 0) {
       setSub(true);
-      const value = currentMonth - userBornMonth;
-      return value;
+      return Math.abs(oldMonth);
     } else {
       setSub(false);
-      return 0;
+      return Math.abs(oldMonth);
     }
-  }, [answer3, showAge]);
-  console.log("showAge", yearsOld, showMonth, sub);
+  }, [oldMonth]);
 
   useEffect(() => {
-    if (sub) setYearsOld(yearsOld - 1);
-    else setYearsOld(yearsOld);
-  }, [yearsOld]);
+    if (sub) {
+      setYearsOld(yearsOld - 1);
+    } else {
+      setYearsOld(yearsOld);
+    }
+  }, [showMonth, sub]);
 
   const handleSubmitForm = () => {
     // call api to update to sharepoint list
@@ -309,7 +307,7 @@ const QuestionList = (props: IQuestionList) => {
           alignItems: "center",
         }}
       >
-        {questionNumber >= 2 && questionNumber < 4 && (
+        {questionNumber >= 2 && questionNumber <= 4 && (
           <Button
             variant="contained"
             onClick={() => {
